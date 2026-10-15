@@ -5,3 +5,4 @@ __pycache__/
 venv/
 data/recipients.json
 !data/recipients.example.json
+data/last_sent_date.txt

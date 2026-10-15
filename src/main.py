@@ -9,6 +9,7 @@ from src.email_sender import send_email
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 RECIPIENTS_FILE = PROJECT_ROOT / "data" / "recipients.json"
+LAST_SENT_FILE = PROJECT_ROOT / "data" / "last_sent_date.txt"
 
 
 def load_recipients():
@@ -156,13 +157,30 @@ def create_newsletter(quote, today):
 
     return subject, plain_text, html_body
 
+def already_processed_today(today):
+    """Check whether today's emails have already been processed."""
+
+    if not LAST_SENT_FILE.exists():
+        return False
+
+    last_sent = LAST_SENT_FILE.read_text(encoding="utf-8").strip()
+    return last_sent == today.isoformat()
+
 
 def main():
-    quote = get_daily_quote()
     today = date.today()
 
+    if already_processed_today(today):
+        print(f"Today's emails have already been processed: {today}.")
+        return
+
+    quote = get_daily_quote()
     subject, plain_text, html_body = create_newsletter(quote, today)
     recipients = load_recipients()
+
+    # Record today's date before attempting to send emails.
+    LAST_SENT_FILE.parent.mkdir(parents=True, exist_ok=True)
+    LAST_SENT_FILE.write_text(today.isoformat(), encoding="utf-8")
 
     for recipient in recipients:
         try:
@@ -173,7 +191,6 @@ def main():
                 html_body=html_body,
             )
         except Exception as error:
-            # Continue attempting delivery to the remaining recipients.
             print(f"Could not send to {recipient}: {error}")
 
     print(f"Finished processing {len(recipients)} recipients.")
