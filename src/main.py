@@ -178,9 +178,7 @@ def main():
     subject, plain_text, html_body = create_newsletter(quote, today)
     recipients = load_recipients()
 
-    # Record today's date before attempting to send emails.
-    LAST_SENT_FILE.parent.mkdir(parents=True, exist_ok=True)
-    LAST_SENT_FILE.write_text(today.isoformat(), encoding="utf-8")
+    failed_recipients = []
 
     for recipient in recipients:
         try:
@@ -190,10 +188,19 @@ def main():
                 body=plain_text,
                 html_body=html_body,
             )
+            print(f"Successfully sent email to {recipient}.")
         except Exception as error:
+            failed_recipients.append(recipient)
             print(f"Could not send to {recipient}: {error}")
 
-    print(f"Finished processing {len(recipients)} recipients.")
+    if failed_recipients:
+        raise RuntimeError(
+            f"Email delivery failed for {len(failed_recipients)} recipient(s). "
+            "Today's date was not recorded."
+        )
+
+    record_processed_today(today)
+    print(f"Successfully processed all {len(recipients)} recipients.")
 
 
 if __name__ == "__main__":
