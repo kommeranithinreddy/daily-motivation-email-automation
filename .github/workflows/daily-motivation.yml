@@ -1,0 +1,45 @@
+name: Daily Motivation Email
+
+on:
+  schedule:
+    - cron: "0 9 * * *"
+      timezone: "Asia/Kolkata"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: daily-motivation-email
+  cancel-in-progress: false
+
+jobs:
+  send-motivation:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.15"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Configure recipients
+        env:
+          RECIPIENTS_JSON: ${{ secrets.RECIPIENTS_JSON }}
+        run: |
+          python -c "import json, os; json.dump(json.loads(os.environ['RECIPIENTS_JSON']), open('data/recipients.json', 'w', encoding='utf-8'), indent=2)"
+
+      - name: Send daily motivation
+        env:
+          EMAIL_ADDRESS: ${{ secrets.EMAIL_ADDRESS }}
+          EMAIL_APP_PASSWORD: ${{ secrets.EMAIL_APP_PASSWORD }}
+        run: |
+          python -m src.main
