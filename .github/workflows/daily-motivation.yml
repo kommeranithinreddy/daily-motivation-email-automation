@@ -20,6 +20,8 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -43,3 +45,16 @@ jobs:
           EMAIL_APP_PASSWORD: ${{ secrets.EMAIL_APP_PASSWORD }}
         run: |
           python -m src.main
+
+      - name: Persist daily record
+        if: success()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/last_sent_date.txt
+          if ! git diff --cached --quiet; then
+            git commit -m "Record daily motivation email date"
+            git push origin HEAD:main
+          else
+            echo "No daily record changes to commit."
+          fi
