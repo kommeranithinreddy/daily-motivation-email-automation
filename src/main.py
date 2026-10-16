@@ -1,5 +1,6 @@
 import json
-from datetime import date
+from datetime import datetime
+from zoneinfo import ZoneInfo
 from html import escape
 from pathlib import Path
 
@@ -168,7 +169,7 @@ def already_processed_today(today):
 
 
 def main():
-    today = date.today()
+    today = datetime.now(ZoneInfo("Asia/Kolkata")).date()
 
     if already_processed_today(today):
         print(f"Today's emails have already been processed: {today}.")
