@@ -167,6 +167,10 @@ def already_processed_today(today):
     last_sent = LAST_SENT_FILE.read_text(encoding="utf-8").strip()
     return last_sent == today.isoformat()
 
+def record_processed_today(today):
+    """Record the date after all email attempts succeed."""
+    LAST_SENT_FILE.parent.mkdir(parents=True, exist_ok=True)
+    LAST_SENT_FILE.write_text(today.isoformat(), encoding="utf-8")
 
 def main():
     today = datetime.now(ZoneInfo("Asia/Kolkata")).date()
