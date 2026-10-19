@@ -2,7 +2,7 @@ name: Daily Motivation Email
 
 on:
   schedule:
-    - cron: "05 8 * * *"
+    - cron: "*/5 * * * *"
   workflow_dispatch:
   
 
