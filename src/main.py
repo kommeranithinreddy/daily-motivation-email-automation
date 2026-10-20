@@ -40,7 +40,7 @@ def load_recipients():
 
 
 def create_newsletter(quote, today):
-    """Create the plain-text and HTML newsletter."""
+    """Create a minimal, elegant motivational newsletter."""
 
     quote_text = escape(quote["quote"])
     author = escape(quote["author"])
@@ -52,112 +52,81 @@ def create_newsletter(quote, today):
     subject = f"Your Daily Motivation — {date_text}"
 
     plain_text = (
-        "A LITTLE MOTIVATION FOR TODAY\n"
-        f"{date_text}\n\n"
-        "TODAY'S INSPIRATION\n\n"
+        f"DAILY MOTIVATION | {date_text}\n\n"
         f'"{quote["quote"]}"\n'
         f"— {quote['author']}\n\n"
-        "A THOUGHT FOR TODAY\n\n"
-        f"{quote['message']}\n\n"
-        "MAKE TODAY COUNT.\n\n"
-        "A little inspiration, delivered to you every day.\n"
+        f"{quote['message']}\n"
     )
 
-    html_body = f"""
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>A Little Motivation</title>
-    </head>
-    <body style="margin:0;padding:24px 10px;background-color:#f3f1ed;
-                 font-family:Georgia,'Times New Roman',serif;color:#172522;">
-        <div style="max-width:680px;margin:0 auto;background-color:#fffaf1;
-                    border:1px solid #eadbc1;border-radius:12px;overflow:hidden;">
+    html_body = f"""\
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Motivation</title>
+</head>
 
-            <div style="padding:38px 28px 30px;text-align:center;
-                        background-color:#f8ead5;border-bottom:3px solid #d3ad68;">
-                <p style="margin:0 0 12px;font-family:Arial,sans-serif;
-                          font-size:11px;letter-spacing:4px;color:#9b702c;">
-                    A DAILY MOMENT OF INSPIRATION
-                </p>
-                <h1 style="margin:0;font-size:34px;line-height:1.2;
-                           font-weight:normal;color:#172522;">
-                    A Little Motivation<br>for Today
-                </h1>
-                <p style="margin:18px 0 0;font-family:Arial,sans-serif;
-                          font-size:12px;letter-spacing:4px;color:#75644f;">
-                    {date_upper}
-                </p>
-                <p style="margin:22px 0 0;font-size:13px;font-style:italic;
-                          color:#75644f;">
-                    Same small steps, brighter days.
-                </p>
-            </div>
+<body style="margin:0;padding:24px 10px;background-color:#f3f1ed;
+             font-family:Georgia,'Times New Roman',serif;color:#172522;">
 
-            <div style="padding:38px 28px 30px;text-align:center;">
-                <p style="margin:0 0 22px;font-family:Arial,sans-serif;
-                          font-size:12px;font-weight:bold;letter-spacing:4px;
-                          color:#8e692f;">
-                    TODAY'S INSPIRATION
-                </p>
-                <div style="width:65px;height:2px;margin:0 auto 28px;
-                            background-color:#c99a43;"></div>
-                <p style="margin:0;font-size:27px;line-height:1.55;
-                          font-style:italic;overflow-wrap:anywhere;">
-                    &ldquo;{quote_text}&rdquo;
-                </p>
-                <p style="margin:22px 0 0;font-size:17px;line-height:1.5;
-                          color:#766653;">
-                    &mdash; {author}
-                </p>
-            </div>
+    <div style="max-width:680px;margin:0 auto;background-color:#fffaf1;
+                border:1px solid #eadbc1;border-radius:12px;overflow:hidden;">
 
-            <div style="margin:0 22px;padding:25px 22px;
-                        background-color:#f8eddd;border-left:3px solid #c99a43;
-                        border-radius:6px;">
-                <p style="margin:0 0 15px;font-family:Arial,sans-serif;
-                          font-size:12px;font-weight:bold;letter-spacing:3px;
-                          color:#9b702c;">
-                    A THOUGHT FOR TODAY
-                </p>
-                <p style="margin:0;font-size:17px;line-height:1.8;
-                          color:#28352f;overflow-wrap:anywhere;">
-                    {thought}
-                </p>
-            </div>
+        <!-- Header -->
+        <div style="padding:38px 28px 30px;text-align:center;
+                    background-color:#f8ead5;
+                    border-bottom:3px solid #d3ad68;">
 
-            <div style="padding:30px 24px;text-align:center;">
-                <div style="width:48px;height:2px;margin:0 auto 20px;
-                            background-color:#c99a43;"></div>
-                <p style="margin:0;font-size:17px;letter-spacing:3px;
-                          color:#9b702c;">
-                    MAKE TODAY COUNT.
-                </p>
-            </div>
+            <p style="margin:0 0 12px;font-family:Arial,sans-serif;
+                      font-size:11px;letter-spacing:4px;color:#9b702c;">
+                DAILY MOTIVATION
+            </p>
 
-            <div style="margin:0 22px;padding:20px 8px 24px;
-                        border-top:1px solid #e7d7bd;text-align:center;">
-                <p style="margin:0;font-size:14px;line-height:1.8;
-                          color:#756653;">
-                    A little inspiration, delivered to you every day.
-                </p>
-                <p style="margin:12px 0 0;font-family:Arial,sans-serif;
-                          font-size:10px;letter-spacing:2px;line-height:2;
-                          color:#8e795e;">
-                    STAY POSITIVE &nbsp;|&nbsp; STAY CONSISTENT &nbsp;|&nbsp;
-                    KEEP GROWING
-                </p>
-            </div>
+            <p style="margin:0;font-family:Arial,sans-serif;
+                      font-size:12px;letter-spacing:3px;color:#75644f;">
+                {date_upper}
+            </p>
 
         </div>
-    </body>
-    </html>
-    """
+
+        <!-- Motivational Quote -->
+        <div style="padding:38px 28px 28px;text-align:center;">
+
+            <p style="margin:0;font-size:27px;line-height:1.55;
+                      font-style:italic;color:#172522;
+                      overflow-wrap:anywhere;">
+                &ldquo;{quote_text}&rdquo;
+            </p>
+
+            <p style="margin:22px 0 0;font-size:17px;line-height:1.5;
+                      color:#766653;overflow-wrap:anywhere;">
+                &mdash; {author}
+            </p>
+
+        </div>
+
+        <!-- Daily Reflection -->
+        <div style="margin:0 32px 34px;text-align:center;">
+
+            <div style="width:44px;height:1px;margin:0 auto 22px;
+                        background-color:#c99a43;"></div>
+
+            <p style="margin:0;font-size:16px;line-height:1.8;
+                      font-style:italic;color:#756653;
+                      overflow-wrap:anywhere;">
+                {thought}
+            </p>
+
+        </div>
+
+    </div>
+
+</body>
+</html>
+"""
 
     return subject, plain_text, html_body
-
 def already_processed_today(today):
     """Check whether today's emails have already been processed."""
 

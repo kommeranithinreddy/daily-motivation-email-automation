@@ -6,3 +6,8 @@ venv/
 data/recipients.json
 !data/recipients.example.json
 data/last_sent_date.txt
+
+# Local email preview and backup files
+newsletter_preview.html
+preview_newsletter.py
+src/main_backup.py
